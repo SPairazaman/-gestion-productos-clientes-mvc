@@ -1,0 +1,151 @@
+﻿@{
+    ViewData["Title"] = "Productos";
+}
+
+
+<h2>Lista de productos</h2>
+
+<input type="text" id="txtfiltro" />
+<button id="btnBuscar" class="btn btn-primary">Buscar</button>
+<button id="createProductoButton" class="btn btn-success">Nuevo</button>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Stock</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<!-- Modal-->
+<div class="modal fade" id="createProductoModal" tabindex="-1" role="dialog" aria-labelledby="createProductoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createProductoLabel">Crear Producto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- El contenido del modal se carga aquí -->
+                <div>
+                    <form id="createProductoForm">
+                        <div class="form-group">
+                            <label for="Nombre">Nombre</label>
+                            <input type="text" id="txtNombre" name="txtNombre" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtPrecio">Precio</label>
+                            <input type="text" id="txtPrecio" name="txtPrecio" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtStock">Stock</label>
+                            <input type="text" id="txtStock" name="txtStock" class="form-control" />
+                        </div>
+
+                        <br />
+                    </form>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="saveProductoButton" class="btn btn-success">Guardar</button>
+                <input type="button" value="Cerrar" class="btn btn-secondary" data-bs-dismiss="modal" />
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<script>
+    $(document).ready(function () {
+
+        ListProductos();
+
+         $('#createProductoButton').click(function () {
+            //Si quiero mostrar sin usar la vista parcial
+            $('#createProductoModal').modal('show');
+        });
+
+        $('#btnBuscar').click(function () {
+            ListProductos();
+         });
+
+        $('#saveProductoButton').click(function () {
+            Grabar();
+       });
+
+        function ListProductos(){
+
+             var filtro=$('#txtfiltro').val();
+            $.ajax({
+                type: "GET",
+                url: "/Productos/Get?filtro="+filtro,
+                success: function (result) {
+
+                    console.log(result);
+
+                    var tableBody = $('table tbody');
+                     tableBody.empty(); // Vaciar la tabla
+
+                    result.forEach(function (producto) {
+                        var newRow = `
+                                        <tr>
+                                                <td>${producto.productoID}</td>
+                                                <td>${producto.nombre}</td>
+                                                <td>${producto.precio}</td>
+                                                <td>${producto.stock}</td>
+                                        </tr>`;
+                        tableBody.append(newRow);
+                    });
+
+
+                },
+                error: function () {
+                    alert('Hubo un error al listar los productos.');
+                }
+            });
+
+        }
+
+
+        function Grabar(){
+
+             $.ajax({
+                type: "POST",
+                url: "/Productos/Create",
+                data: {
+                    Nombre: $("#txtNombre").val(),
+                    Precio: $("#txtPrecio").val(),
+                    Stock: $("#txtStock").val()
+                },
+                success: function (response) {
+                    Swal.fire({
+                        title: "Good job!",
+                        text: response.message,
+                        icon: "success"
+                    });
+                    $('#createProductoModal').modal('hide');
+                    ListProductos();
+
+                },
+                error: function () {
+                    alert('Hubo un error al enviar los datos.');
+                }
+            });
+        }
+
+
+
+    });
+</script>
