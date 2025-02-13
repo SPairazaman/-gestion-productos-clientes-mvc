@@ -2,6 +2,7 @@
 using ProductosClientesMVC.Models.Response;
 using System.Text;
 using System.Text.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ProductosClientesMVC.Controllers
 {
@@ -32,15 +33,15 @@ namespace ProductosClientesMVC.Controllers
                 }
                 else
                 {
-                    return Json(new { message = $"Hubo un error:{response.StatusCode}" });
+                    return new JsonResult(new {success=true, message = $"Hubo un errror: {response.StatusCode}", icon = "error" });
                     productos = new List<ProductoResponseV1>(); 
                 }
-                return Json(productos);
+                return Json(new  {  success = true, productos = productos });
+                //return Json(productos);
             }
             catch (Exception)
             {
-
-                return Json(new {message="Error, Comunicarse con el administrador"});
+                return Json(new {success=false, message = "Error, Contáctese con el administrador", icon = "error" });
             }
         }
 
@@ -57,17 +58,16 @@ namespace ProductosClientesMVC.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     string JsonResponse = await response.Content.ReadAsStringAsync();
-                    return new JsonResult(new { message = "Producto registrado correctamente" });
+                    return new JsonResult(new {message = "Producto registrado correctamente",icon="success" });
                 }
                 else
                 {
-                    return new JsonResult(new { message = $"Hubo un errror: {response.StatusCode}" });
+                    return new JsonResult(new { message = $"Hubo un errror: {response.StatusCode}", icon="error" });
                 }
             }
             catch (Exception)
             {
-
-                return Json(new { message = "Error,Contáctese con el administrador" });
+                return Json(new { message = "Error, Contáctese con el administrador", icon = "error"});
             }
         }
 
