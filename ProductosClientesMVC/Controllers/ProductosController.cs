@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProductosClientesMVC.Models.Request;
 using ProductosClientesMVC.Models.Response;
 using System.Text;
 using System.Text.Json;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ProductosClientesMVC.Controllers
 {
@@ -33,7 +33,7 @@ namespace ProductosClientesMVC.Controllers
                 }
                 else
                 {
-                    return new JsonResult(new {success=true, message = $"Hubo un errror: {response.StatusCode}", icon = "error" });
+                    return new JsonResult(new {success=false, message = $"Hubo un errror: {response.StatusCode}", icon = "error" });
                     productos = new List<ProductoResponseV1>(); 
                 }
                 return Json(new  {  success = true, productos = productos });
@@ -45,7 +45,7 @@ namespace ProductosClientesMVC.Controllers
             }
         }
 
-        public async Task<JsonResult> CreateAsync(ProductoResponseV1 request)
+        public async Task<JsonResult> CreateAsync(ProductoRequestV1 request)
         {
             try
             {

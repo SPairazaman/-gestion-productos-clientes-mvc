@@ -5,7 +5,7 @@
 
 <h2>Lista de productos</h2>
 
-<input type="text" id="txtfiltro" />
+<input type="text" id="txtfiltro" placeholder="Nombre" />
 <button id="btnBuscar" class="btn btn-primary">Buscar</button>
 <button id="createProductoButton" class="btn btn-success">Nuevo</button>
 <table class="table">
@@ -54,7 +54,7 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" id="saveProductoButton" class="btn btn-success">Guardar</button>
+                <button type="submit" id="saveProductoButton" class="btn btn-success">Guardar</button>
                 <input type="button" value="Cerrar" class="btn btn-secondary" data-bs-dismiss="modal" />
             </div>
 
@@ -62,101 +62,109 @@
     </div>
 </div>
 
-
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="~/js/productos.js"></script>
 
 
 <script>
-    $(document).ready(function () {
-
-        ListProductos();
-
-         $('#createProductoButton').click(function () {
-            //Si quiero mostrar sin usar la vista parcial
-            $('#createProductoModal').modal('show');
-        });
-
-        $('#btnBuscar').click(function () {
-            ListProductos();
-         });
-
-        $('#saveProductoButton').click(function () {
-            Grabar();
-       });
-
-        function ListProductos(){
-
-             var filtro=$('#txtfiltro').val();
-            $.ajax({
-                type: "GET",
-                url: "/Productos/Get?filtro="+filtro,
-                success: function (result) {
-
-                    console.log(JSON.stringify(result));
-
-                    if(result.success){
-
-                         var tableBody = $('table tbody');
-                         tableBody.empty(); // Vaciar la tabla
-
-                       $.each(result.productos, function (index, producto) {
-                            var newRow = `
-                                            <tr>
-                                                    <td>${producto.productoID}</td>
-                                                    <td>${producto.nombre}</td>
-                                                    <td>${producto.precio}</td>
-                                                    <td>${producto.stock}</td>
-                                            </tr>`;
-                            tableBody.append(newRow);
-                        });
-
-                    }else{
-                         Swal.fire({
-                        title: "Mensaje",
-                        text: result.message,
-                        icon: result.icon
-                        });
-                    }
-                },
-                error: function (error) {
-                   
-                    console.log(error);
-                }
-            });
-
-        }
 
 
-        function Grabar(){
+    // $(document).ready(function () {
 
-             $.ajax({
-                type: "POST",
-                url: "/Productos/Create",
-                data: {
-                    Nombre: $("#txtNombre").val(),
-                    Precio: $("#txtPrecio").val(),
-                    Stock: $("#txtStock").val()
-                },
-                success: function (response) {
-                    console.log(response);
-                        Swal.fire({
-                        title: "Mensaje",
-                        text: response.message,
-                        icon: response.icon
-                    });
-
-                    $('#createProductoModal').modal('hide');
-                    ListProductos();
-
-                },
-                error: function () {
-                    alert('Hubo un error al enviar los datos.');
-                }
-            });
-        }
+    //     ListProductos();
 
 
+       
 
-    });
+
+        //  $('#createProductoButton').click(function () {
+        //     $('#createProductoModal').modal('show');
+        // });
+
+    //     $('#btnBuscar').click(function () {
+    //         ListProductos();
+    //      });
+
+    //    //  $('#saveProductoButton').click(function () {
+    //    //      Grabar();
+    //    // });
+
+    //     function ListProductos(){
+
+    //          var filtro=$('#txtfiltro').val();
+    //         $.ajax({
+    //             type: "GET",
+    //             url: "/Productos/Get?filtro="+filtro,
+    //             success: function (result) {
+
+    //                 console.log(JSON.stringify(result));
+
+    //                 if(result.success){
+
+    //                      var tableBody = $('table tbody');
+    //                      tableBody.empty(); // Vaciar la tabla
+
+    //                    $.each(result.productos, function (index, producto) {
+    //                         var newRow = `
+    //                                         <tr>
+    //                                                 <td>${producto.productoID}</td>
+    //                                                 <td>${producto.nombre}</td>
+    //                                                 <td>${producto.precio}</td>
+    //                                                 <td>${producto.stock}</td>
+    //                                         </tr>`;
+    //                         tableBody.append(newRow);
+    //                     });
+
+    //                 }else{
+    //                     Swal.fire({
+    //                     title: "Mensaje",
+    //                     text: result.message,
+    //                     icon: result.icon
+    //                     });
+    //                 }
+    //             },
+    //             error: function (error) {
+    //                 console.log(error);
+    //             }
+    //         });
+
+    //     }
+
+
+    //     function Grabar(){
+
+    //          $.ajax({
+    //             type: "POST",
+    //             url: "/Productos/Create",
+    //             data: {
+    //                 Nombre: $("#txtNombre").val(),
+    //                 Precio: $("#txtPrecio").val(),
+    //                 Stock: $("#txtStock").val()
+    //             },
+    //             success: function (response) {
+    //                 console.log(response);
+    //                     Swal.fire({
+    //                     title: "Mensaje",
+    //                     text: response.message,
+    //                     icon: response.icon
+    //                 });
+
+    //                 $('#createProductoModal').modal('hide');
+    //                 ListProductos();
+
+    //             },
+    //             error: function () {
+    //                 alert('Hubo un error al enviar los datos.');
+    //             }
+    //         });
+    //     }
+
+       
+    // });
 </script>
