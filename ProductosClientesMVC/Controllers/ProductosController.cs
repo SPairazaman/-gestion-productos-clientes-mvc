@@ -71,5 +71,32 @@ namespace ProductosClientesMVC.Controllers
             }
         }
 
+        public async Task<JsonResult> DeleteAsync(int id)
+        {
+
+            try
+            {
+                using HttpClient httpClient = new HttpClient();
+                url = url + "?id=" + id;
+
+                HttpResponseMessage response = await httpClient.DeleteAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string JsonResponse = await response.Content.ReadAsStringAsync();
+                    return new JsonResult(new {success=true, message = "Producto eliminado correctamente", icon = "success" });
+                }
+                else
+                {
+                    return new JsonResult(new {success=false, message = $"Hubo un errror: {response.StatusCode}", icon = "error" });
+                }
+            }
+            catch (Exception)
+            {
+                return Json(new { success=false,message = "Error, Contáctese con el administrador", icon = "error" });
+            }
+
+        }
+
     }
 }
