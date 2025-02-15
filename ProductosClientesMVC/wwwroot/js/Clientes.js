@@ -15,6 +15,25 @@
         Grabar();
     });
 
+
+    $("#tablaClientes").on("click", ".eliminar-btn", function () {
+        var id = $(this).data("id");
+
+        Swal.fire({
+            title: "Desea eliminar este registro?",
+            showCancelButton: true,
+            confirmButtonText: "Confirmar",
+            denyButtonText: `Cancel`
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Eliminar(id);
+                Swal.fire("Registro eliminado", "", "success");
+            } else if (result.isDenied) {
+                Swal.fire("Cancelado", "", "info");
+            }
+        });
+    });
+
     function ListClientes() {
 
         var filtro = $('#txtfiltro').val();
@@ -25,18 +44,19 @@
 
                 console.log(result);
                 if (result.success) {
-                    var tableBody = $('table tbody');
-                    tableBody.empty(); // Vaciar la tabla
 
+                    $("#tablaClientes").empty();
                     $.each(result.clientes, function (index, cliente) {
-                        var newRow = `
-                                            <tr>
+
+                        $("#tablaClientes").append(`
+                                             <tr id="cliente-${cliente.clienteID}">
                                                     <td>${cliente.clienteID}</td>
                                                     <td>${cliente.nombre}</td>
                                                     <td>${cliente.correo}</td>
                                                     <td>${cliente.telefono}</td>
-                                            </tr>`;
-                        tableBody.append(newRow);
+                                                  <td><button class="eliminar-btn btn btn-primary" data-id="${cliente.clienteID}">Eliminar</button></td>
+                                             </tr>
+                             `);
                     });
                 } else
                 {
@@ -81,6 +101,34 @@
                 alert('Hubo un error al enviar los datos.');
             }
         });
-    }
+     }
+
+
+        function Eliminar(clienteId) {
+
+            $.ajax({
+                url: "/Clientes/Delete",
+                type: "POST",
+                data: { id: clienteId },
+                success: function (response) {
+                    if (response.success) {
+                        $("#cliente-" + clienteId).remove(); // Eliminar fila de la tabla
+                    }
+
+                    Swal.fire({
+                        title: "Mensaje",
+                        text: result.message,
+                        icon: result.icon
+                    });
+
+                },
+                error: function (xhr, status, error) {
+                    alert("Ocurrió un error al eliminar el cliente.");
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+
+
 
 });
