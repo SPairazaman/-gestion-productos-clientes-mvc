@@ -1,76 +1,61 @@
 ﻿
 $(document).ready(function () {
 
-    //  $('#createProductoButton').click(function () {
-    //     $('#createProductoModal').modal('show');
-    // });
+    ListProductos();
 
-    //$('#createProductoForm').validate({
-    //    rules: {
-    //        nombre: {
-    //            required: true,
-    //            minlength: 10,
-    //            maxlength: 50
-    //        },
-    //        precio: {
-    //            required: true,
-    //            digits: true,
-    //            number: true
-    //        },
-    //        cantidad: {
-    //            required: true,
-    //            digits: true,
-    //            minlength: 2
-    //        },
-    //        stock: {
-    //            required: true,
-    //            digits: true,
-    //            minlength: 2
-    //        },
-    //    },
-    //    messages: {
-    //        nombre: {
-    //            required: "Por favor, ingrese nombre",
-    //            minlength: "El nombre debe tener mínimo 20 caracteres.",
-    //            maxlength: "El nombre debe tener maximo 50 caracteres."
-    //        },
-    //        precio: {
-    //            required: "Por favor, ingrese precio.",
-    //            digits: "El precio solo debe contener 2 dígitos.",
-    //            minlength: "El precio debe tener minimo 2 caracteres.",
-    //        },
-    //        cantidad: {
-    //            required: "Por favor, ingrese cantidad.",
-    //            digits: "La cantidad solo debe contener 2 dígitos.",
-    //            minlength: "La cantidad debe tener minimo 2 caracteres."
-    //        },
-    //        stock: {
-    //            required: "Por favor, ingrese stock.",
-    //            digits: "El stock .",
-    //            minlength: "La cantidad debe tener minimo 2 caracteres."
-    //        }
+    $('#createProductoButton').click(function () {
+        $('#createProductoModal').modal('show');
+    });
 
-    //    },
-    //    submitHandler: function (form) {
-    //        form.submit();
-    //        // Grabar();
-    //      //     ListProductos();
-    //});
-
-
+    $('#btnBuscar').click(function () {
         ListProductos();
+    });
 
-          $('#createProductoButton').click(function () {
-             $('#createProductoModal').modal('show');
-         });
+    $('#saveProductoButton').click(function () {
+        console.log("validando...");
+        $('#createProductoForm').validate({
+            rules: {
+                txtNombre: {
+                    required: true,
+                    minlength: 3
+                },
+                txtPrecio: {
+                    required: true,
+                    number: true,
+                    min: 0.01
+                },
+                txtStock: {
+                    required: true,
+                    number: true,
+                    min: 1
+                },
+            },
+            messages: {
+                txtNombre: {
+                    required: "Por favor, ingrese nombre",
+                    minlength: "El nombre debe tener al menos 3 caracteres."
+                },
+                txtPrecio: {
+                    required: "Por favor, ingrese precio.",
+                    number: "Ingrese un valor numérico",
+                    min: "El precio debe ser mayor que 0"
+                 },
+                txtStock: {
+                    required: "Por favor, ingrese stock.",
+                    number: "Ingrese un valor numérico",
+                    min: "El stock debe ser mayor que 0"
+                }
 
-         $('#btnBuscar').click(function () {
-             ListProductos();
-          });
+            }
+         }); 
 
-          $('#saveProductoButton').click(function () {
-              Grabar();
-          });
+        var form = $("#createProductoForm");
+        form.validate();
+        if (form.valid()) {
+            Grabar();
+        }
+
+     });
 
          $("#tablaProductos").on("click", ".eliminar-btn", function () {
             var id = $(this).data("id");
@@ -110,7 +95,7 @@ $(document).ready(function () {
                                              <tr id="producto-${producto.productoID}">
                                                      <td>${producto.productoID}</td>
                                                      <td>${producto.nombre}</td>
-                                                     <td>${producto.precio}</td>
+                                                     <td>S/.${producto.precio.toFixed(2)}</td>
                                                      <td>${producto.stock}</td>
                                                      <td><button class="eliminar-btn btn btn-primary" data-id="${producto.productoID}">Eliminar</button></td>
                                              </tr>

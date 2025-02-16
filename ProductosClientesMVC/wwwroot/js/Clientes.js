@@ -1,9 +1,24 @@
 ﻿$(document).ready(function () {
 
+    //jQuery.validator.setDefaults({
+    //    debug: true,
+    //    success: "valid"
+    //});
+
+    //var form = $("#createClienteForm");
+    //form.validate();
+    //$("#saveClienteButton").click(function () {
+    //    alert("Valid: " + form.valid());
+    //});
+
     ListClientes();
 
+    //$("#createClienteForm").submit(function (e) {
+    //    alert('submit intercepted');
+    //    e.preventDefault(e);
+    //});
+
     $('#createClienteButton').click(function () {
-        //Si quiero mostrar sin usar la vista parcial
         $('#createClienteModal').modal('show');
     });
 
@@ -12,7 +27,44 @@
     });
 
     $('#saveClienteButton').click(function () {
-        Grabar();
+
+        //jQuery.validator.addMethod("phoneUS", function (txtTelefono, element) {
+        //    if (/^\d{3}-?\d{3}-?\d{4}$/g.test(value)) {
+        //        return true;
+        //    } else {
+        //        return false;
+        //    };
+        //}, "Ingrese un teléfono válido");
+
+        $("#createClienteForm").validate({
+            rules: {
+                txtNombre: {
+                    required: true,
+                    minlength: 3
+                },
+                txtCorreo: {
+                    required: true,
+                    email:true
+                }
+            },
+            messages: {
+                txtNombre: {
+                    required: "El nombre es obligatorio",
+                    minlength: "El nombre debe tener al menos 3 caracteres"
+                },
+                txtCorreo: {
+                    required: "El correo es obligatorio",
+                    email:"Ingrese un correo válido "
+                }
+            }
+         });
+
+        var form = $("#createClienteForm");
+        form.validate();
+        if (form.valid()) {
+             Grabar();
+        }
+
     });
 
 
@@ -57,6 +109,7 @@
                                                   <td><button class="eliminar-btn btn btn-primary" data-id="${cliente.clienteID}">Eliminar</button></td>
                                              </tr>
                              `);
+
                     });
                 } else
                 {

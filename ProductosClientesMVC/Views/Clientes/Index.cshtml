@@ -36,17 +36,17 @@
                     <form id="createClienteForm">
                         <div class="form-group">
                             <label for="Nombre">Nombres</label>
-                            <input type="text" id="txtNombre" name="txtNombre" class="form-control" />
+                            <input type="text" id="txtNombre" name="txtNombre" class="form-control error" required value=" " />
                         </div>
 
                         <div class="form-group">
                             <label for="txtCorreo">Correo</label>
-                            <input type="text" id="txtCorreo" name="txtCorreo" class="form-control" />
+                            <input type="text" id="txtCorreo" name="txtCorreo" class="form-control error" required value=" " />
                         </div>
 
                         <div class="form-group">
                             <label for="txtTelefono">Teléfono</label>
-                            <input type="text" id="txtTelefono" name="txtTelefono" class="form-control" />
+                            <input type="text" id="txtTelefono" name="txtTelefono" class="form-control error" value=" " />
                         </div>
 
                         <br />
@@ -63,6 +63,8 @@
     </div>
 </div>
 
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@section scripts{
+
 <script src="~/js/clientes.js"></script>
+
+}

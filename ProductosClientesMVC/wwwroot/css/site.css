@@ -20,3 +20,12 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.error {
+    color: red;
+    font-size: 14px;
+}
+
+input.error {
+    border: 1px solid red;
+}
