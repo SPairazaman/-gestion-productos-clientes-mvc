@@ -1,22 +1,6 @@
 ﻿$(document).ready(function () {
 
-    //jQuery.validator.setDefaults({
-    //    debug: true,
-    //    success: "valid"
-    //});
-
-    //var form = $("#createClienteForm");
-    //form.validate();
-    //$("#saveClienteButton").click(function () {
-    //    alert("Valid: " + form.valid());
-    //});
-
     ListClientes();
-
-    //$("#createClienteForm").submit(function (e) {
-    //    alert('submit intercepted');
-    //    e.preventDefault(e);
-    //});
 
     $('#createClienteButton').click(function () {
         $('#createClienteModal').modal('show');
@@ -28,13 +12,13 @@
 
     $('#saveClienteButton').click(function () {
 
-        //jQuery.validator.addMethod("phoneUS", function (txtTelefono, element) {
-        //    if (/^\d{3}-?\d{3}-?\d{4}$/g.test(value)) {
-        //        return true;
-        //    } else {
-        //        return false;
-        //    };
-        //}, "Ingrese un teléfono válido");
+        jQuery.validator.addMethod("phoneUS", function (txtTelefono, element) {
+            if (/^\d{3}-?\d{3}-?\d{4}$/g.test(value)) {
+                return true;
+            } else {
+                return false;
+            };
+        }, "Ingrese un teléfono válido");
 
         $("#createClienteForm").validate({
             rules: {
@@ -45,6 +29,10 @@
                 txtCorreo: {
                     required: true,
                     email:true
+                },
+                txtTelefono: {
+                    required: false,
+                    pattern: /^9\d{8}$|^01\d{7}$/
                 }
             },
             messages: {
@@ -55,6 +43,9 @@
                 txtCorreo: {
                     required: "El correo es obligatorio",
                     email:"Ingrese un correo válido "
+                },
+                txtTelefono: {
+                    pattern: "Ingrese un teléfono válido (Ej: 912345678 o 012345678)."
                 }
             }
          });
@@ -62,7 +53,8 @@
         var form = $("#createClienteForm");
         form.validate();
         if (form.valid()) {
-             Grabar();
+            Grabar();
+            Limpiar();
         }
 
     });
@@ -99,14 +91,13 @@
 
                     $("#tablaClientes").empty();
                     $.each(result.clientes, function (index, cliente) {
-
                         $("#tablaClientes").append(`
                                              <tr id="cliente-${cliente.clienteID}">
                                                     <td>${cliente.clienteID}</td>
                                                     <td>${cliente.nombre}</td>
                                                     <td>${cliente.correo}</td>
-                                                    <td>${cliente.telefono}</td>
-                                                  <td><button class="eliminar-btn btn btn-primary" data-id="${cliente.clienteID}">Eliminar</button></td>
+                                                    <td>${cliente.telefono ? cliente.telefono : ""}</td>
+                                                  <td><button class="eliminar-btn btn-danger btn-sm rounded-0" data-id="${cliente.clienteID}">Eliminar</button></td>
                                              </tr>
                              `);
 
@@ -182,6 +173,10 @@
             });
         }
 
-
+    function Limpiar() {
+        Nombre: $("#txtNombre").val("");
+        Correo: $("#txtCorreo").val("");
+        Telefono: $("#txtTelefono").val("");
+    }
 
 });

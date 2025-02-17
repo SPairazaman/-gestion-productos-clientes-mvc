@@ -50,7 +50,6 @@ namespace ProductosClientesMVC.Controllers
             try
             {
                 using HttpClient httpClient = new HttpClient();
-
                 string JsonRequest =JsonSerializer.Serialize(request);
                 HttpContent content = new StringContent(JsonRequest, Encoding.UTF8, "application/json");
                 HttpResponseMessage response= await httpClient.PostAsync(url, content);

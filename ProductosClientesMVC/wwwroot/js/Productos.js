@@ -12,7 +12,16 @@ $(document).ready(function () {
     });
 
     $('#saveProductoButton').click(function () {
-        console.log("validando...");
+
+        $.validator.addMethod("decimalComa", function (value, element) {
+            return this.optional(element) || /^-?\d+([,\.]\d+)?$/.test(value);
+        }, "Ingrese un valor decima");
+
+        $.validator.addMethod("precioValido", function (value, element) {
+            let precio = parseFloat(value.replace(",", "."));
+            return !isNaN(precio) && precio > 0;
+        }, "Ingrese un precio válido mayor a 0");
+
         $('#createProductoForm').validate({
             rules: {
                 txtNombre: {
@@ -21,8 +30,8 @@ $(document).ready(function () {
                 },
                 txtPrecio: {
                     required: true,
-                    number: true,
-                    min: 0.01
+                    decimalComa: true,
+                    precioValido:true
                 },
                 txtStock: {
                     required: true,
@@ -37,8 +46,8 @@ $(document).ready(function () {
                 },
                 txtPrecio: {
                     required: "Por favor, ingrese precio.",
-                    number: "Ingrese un valor numérico",
-                    min: "El precio debe ser mayor que 0"
+                    decimalComa: "Ingrese un número válido (Ej: 10,50 o 10.50)",
+                    precioValido: "El precio debe ser un número mayor a 0 (Ej: 10,50 o 10.50)"
                  },
                 txtStock: {
                     required: "Por favor, ingrese stock.",
@@ -53,6 +62,7 @@ $(document).ready(function () {
         form.validate();
         if (form.valid()) {
             Grabar();
+            Limpiar();
         }
 
      });
@@ -97,7 +107,7 @@ $(document).ready(function () {
                                                      <td>${producto.nombre}</td>
                                                      <td>S/.${producto.precio.toFixed(2)}</td>
                                                      <td>${producto.stock}</td>
-                                                     <td><button class="eliminar-btn btn btn-primary" data-id="${producto.productoID}">Eliminar</button></td>
+                                                     <td><button class="eliminar-btn  btn-danger btn-sm rounded-0" data-id="${producto.productoID}">Eliminar</button></td>
                                              </tr>
                              `);
 
@@ -118,16 +128,15 @@ $(document).ready(function () {
          }
 
 
-         function Grabar(){
-
+    function Grabar() {
               $.ajax({
                  type: "POST",
-                 url: "/Productos/Create",
-                 data: {
-                     Nombre: $("#txtNombre").val(),
-                     Precio: $("#txtPrecio").val(),
-                     Stock: $("#txtStock").val()
-                 },
+                  url: "/Productos/Create",
+                  data: {
+                      Nombre: $("#txtNombre").val(),
+                      Precio: $("#txtPrecio").val().replace(".", ","),
+                      Stock: $("#txtStock").val()
+                  },
                  success: function (response) {
                      console.log(response);
                          Swal.fire({
@@ -168,5 +177,10 @@ $(document).ready(function () {
         });
     }
 
+    function Limpiar(){
+        Nombre: $("#txtNombre").val("");
+        Precio: Number($("#txtPrecio").val(""));
+        Stock: $("#txtStock").val("");
+    }
 
 });
